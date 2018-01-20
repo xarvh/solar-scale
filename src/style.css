@@ -1,0 +1,7 @@
+tbody td{
+  padding: 0.3em;
+}
+
+tbody tr:nth-child(odd){
+  background-color: #d5e5fe;
+}
