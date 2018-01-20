@@ -29,15 +29,15 @@ realSunRadius =
 objects : List Object
 objects =
     [ { name = "Sun", radius = Just realSunRadius, distance = 0 }
-    , { name = "Mercury", radius = Just 2440, distance = 5.79e10 }
-    , { name = "Venus", radius = Just 6052, distance = 1.08e11 }
-    , { name = "Earth", radius = Just 6378, distance = 1.5e11 }
-    , { name = "Mars", radius = Just 3397, distance = 2.28e11 }
-    , { name = "Jupiter", radius = Just 71492, distance = 7.78e11 }
-    , { name = "Saturn", radius = Just 60268, distance = 1.43e12 }
-    , { name = "Uranus", radius = Just 25559, distance = 2.87e12 }
-    , { name = "Neptune", radius = Just 24766, distance = 4.5e12 }
-    , { name = "Pluto", radius = Just 1150, distance = 5.91e12 }
+    , { name = "Mercury", radius = Just 2.44e6, distance = 5.79e10 }
+    , { name = "Venus", radius = Just 6.052e6, distance = 1.08e11 }
+    , { name = "Earth", radius = Just 6.378e6, distance = 1.5e11 }
+    , { name = "Mars", radius = Just 3.397e6, distance = 2.28e11 }
+    , { name = "Jupiter", radius = Just 7.1492e7, distance = 7.78e11 }
+    , { name = "Saturn", radius = Just 6.0268e7, distance = 1.43e12 }
+    , { name = "Uranus", radius = Just 2.5559e7, distance = 2.87e12 }
+    , { name = "Neptune", radius = Just 2.4766e7, distance = 4.5e12 }
+    , { name = "Pluto", radius = Just 1.15e6, distance = 5.91e12 }
     , { name = "Kuiper Belt (inner edge)", radius = Nothing, distance = 4.5e12 }
     , { name = "Kuiper Belt (outer edge)", radius = Nothing, distance = 7.5e12 }
     , { name = "Alpha Centauri", radius = Nothing, distance = 4.07e16 }
@@ -150,42 +150,45 @@ view model =
                         Number n
     in
     div
-        []
+        [ class "root" ]
         [ div
             []
-            [ text "If the Sun had a radius of "
-            , span [] []
-            , input
-                [ type_ "number"
-                , Html.Events.onInput ChangeSize
-                ]
-                []
-            , select
-                [ Html.Events.onInput ChangeUnit
-                , Html.Attributes.disabled (status == NoInput || status == BadNumber)
-                ]
-                [ option [ value "cm" ] [ text "cm" ]
-                , option [ value "m" ] [ text "m" ]
-                , option [ value "in" ] [ text "in" ]
-                ]
-            ]
-        , div
-            []
-            [ text "then the objects in the Solar System would have:" ]
-        , table
-            []
-            [ thead
-                []
-                [ tr
+            [ div
+                [ class "mt" ]
+                [ text "If the Sun had a radius of "
+                , span [] []
+                , input
+                    [ type_ "number"
+                    , Html.Events.onInput ChangeSize
+                    ]
                     []
-                    [ th [] [ text "Name" ]
-                    , th [] [ text "Radius" ]
-                    , th [] [ text "Distance from the Sun" ]
+                , select
+                    [ Html.Events.onInput ChangeUnit
+                    , Html.Attributes.disabled (status == NoInput || status == BadNumber)
+                    ]
+                    [ option [ value "cm" ] [ text "cm" ]
+                    , option [ value "m" ] [ text "m" ]
+                    , option [ value "in" ] [ text "in" ]
                     ]
                 ]
-            , tbody
-                []
-                (List.map (viewObject status model.unit) objects)
+            , div
+                [ class "mt" ]
+                [ text "...then the objects in the Solar System would have:" ]
+            , table
+                [ class "mt" ]
+                [ thead
+                    []
+                    [ tr
+                        []
+                        [ th [] [ text "Name" ]
+                        , th [] [ text "Radius" ]
+                        , th [] [ text "Distance from the Sun" ]
+                        ]
+                    ]
+                , tbody
+                    []
+                    (List.map (viewObject status model.unit) objects)
+                ]
             ]
         ]
 
