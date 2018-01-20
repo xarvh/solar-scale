@@ -5,3 +5,7 @@ tbody td{
 tbody tr:nth-child(odd){
   background-color: #d5e5fe;
 }
+
+td.radius, td.distance {
+  text-align: right;
+}

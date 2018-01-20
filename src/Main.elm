@@ -1,7 +1,9 @@
 module Main exposing (..)
 
+import FormatNumber
+import FormatNumber.Locales
 import Html exposing (..)
-import Html.Attributes exposing (type_, value)
+import Html.Attributes exposing (class, type_, value)
 import Html.Events
 
 
@@ -85,6 +87,10 @@ update msg model =
 -- view
 
 
+formatNumber =
+    FormatNumber.format FormatNumber.Locales.usLocale
+
+
 type Status
     = NoInput
     | BadNumber
@@ -103,16 +109,16 @@ viewRow selectedSunRadius unit obj =
                     ""
 
                 Just r ->
-                    toString (scale r) ++ unit
+                    formatNumber (scale r) ++ unit
 
         distanceText =
-            toString (scale obj.distance) ++ unit
+            formatNumber (scale obj.distance) ++ unit
     in
     tr
         []
-        [ td [] [ text obj.name ]
-        , td [] [ text radiusText ]
-        , td [] [ text distanceText ]
+        [ td [ class "name" ] [ text obj.name ]
+        , td [ class "radius" ] [ text radiusText ]
+        , td [ class "distance" ] [ text distanceText ]
         ]
 
 
@@ -123,7 +129,7 @@ viewObject status unit obj =
             text ""
 
         NoInput ->
-            viewRow realSunRadius "m" obj
+            viewRow (realSunRadius / 1000) "km" obj
 
         Number radius ->
             viewRow radius unit obj
