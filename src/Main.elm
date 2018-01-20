@@ -49,7 +49,7 @@ objects =
 
 
 type alias Model =
-    { selectedSunRadiusAsString : String
+    { selectedSunDiameterAsString : String
     , unit : String
     }
 
@@ -64,7 +64,7 @@ type Msg
 
 
 init =
-    { selectedSunRadiusAsString = ""
+    { selectedSunDiameterAsString = ""
     , unit = "cm"
     }
 
@@ -80,7 +80,7 @@ update msg model =
             { model | unit = unit }
 
         ChangeSize s ->
-            { model | selectedSunRadiusAsString = s }
+            { model | selectedSunDiameterAsString = s }
 
 
 
@@ -94,7 +94,7 @@ formatNumber =
 type Status
     = NoInput
     | BadNumber
-    | Number Float
+    | Radius Float
 
 
 viewRow : Float -> String -> Object -> Html Msg
@@ -103,13 +103,13 @@ viewRow selectedSunRadius unit obj =
         scale n =
             n * selectedSunRadius / realSunRadius
 
-        radiusText =
+        diameterText =
             case obj.radius of
                 Nothing ->
                     ""
 
                 Just r ->
-                    formatNumber (scale r) ++ unit
+                    formatNumber (scale r * 2) ++ unit
 
         distanceText =
             formatNumber (scale obj.distance) ++ unit
@@ -117,8 +117,8 @@ viewRow selectedSunRadius unit obj =
     tr
         []
         [ td [ class "name" ] [ text obj.name ]
-        , td [ class "radius" ] [ text radiusText ]
-        , td [ class "distance" ] [ text distanceText ]
+        , td [ class "range" ] [ text diameterText ]
+        , td [ class "range" ] [ text distanceText ]
         ]
 
 
@@ -131,7 +131,7 @@ viewObject status unit obj =
         NoInput ->
             viewRow (realSunRadius / 1000) "km" obj
 
-        Number radius ->
+        Radius radius ->
             viewRow radius unit obj
 
 
@@ -139,15 +139,15 @@ view : Model -> Html Msg
 view model =
     let
         status =
-            if model.selectedSunRadiusAsString == "" then
+            if model.selectedSunDiameterAsString == "" then
                 NoInput
             else
-                case String.toFloat model.selectedSunRadiusAsString of
+                case String.toFloat model.selectedSunDiameterAsString of
                     Err msg ->
                         BadNumber
 
                     Ok n ->
-                        Number n
+                        Radius (n / 2)
     in
     div
         [ class "root" ]
@@ -155,7 +155,7 @@ view model =
             []
             [ div
                 [ class "mt" ]
-                [ text "If the Sun had a radius of "
+                [ text "If the Sun had a diameter of "
                 , span [] []
                 , input
                     [ type_ "number"
@@ -181,7 +181,7 @@ view model =
                     [ tr
                         []
                         [ th [] [ text "Name" ]
-                        , th [] [ text "Radius" ]
+                        , th [] [ text "Diameter" ]
                         , th [] [ text "Distance from the Sun" ]
                         ]
                     ]
